@@ -1,39 +1,37 @@
 package web.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import web.model.User;
 
+import javax.transaction.*;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
 public class UserDaoImpl implements UserDao {
 
+    @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired
-    private void setEntityManager(EntityManager em) {
-        this.entityManager = em;
-    }
-
     @Override
+    @Transactional
     public void addUser(User user) {
-        entityManager.getTransaction().begin();
         entityManager.persist(user);
-        entityManager.getTransaction().commit();
     }
 
     @Override
+    @Transactional
     public void updateUser(User user) {
-        entityManager.getTransaction().begin();
         entityManager.merge(user);
-        entityManager.getTransaction().commit();
+        entityManager.flush();
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<User> listUser() {
-        return (List<User>) entityManager.createNativeQuery("User.getAll", User.class).getResultList();
+        List<User> users = entityManager.createQuery("SELECT u FROM User u").getResultList();
+        return users;
     }
 
     @Override
@@ -42,9 +40,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    @Transactional
     public void remoteUser(Long id) {
-        entityManager.getTransaction().begin();
         entityManager.remove(getUserById(id));
-        entityManager.getTransaction().commit();
     }
 }

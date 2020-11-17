@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/html">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello</title>
+</head>
+<body>
+    <h1>Add a User</h1>
+
+
+    <form th:action="@{/user/add}" th:object="${user}"  method="post">
+        <table>
+            <tr th:if="${not #lists.isEmpty(user.getFirstname())}">
+                <td>
+                    ID
+                </td>
+                <td>
+                    <input readonly="true" size="8" disabled="true" th:field="*{id}">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    First Name
+                </td>
+                <td>
+                    <input type="text" th:field="*{firstname}">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Last Name
+                </td>
+                <td>
+                    <input type="text" th:field="*{lastname}">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Age
+                </td>
+                <td>
+                    <input type="text" th:field="*{age}">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <th:block th:if="${not #lists.isEmpty(user.getFirstname())}">
+                        <input type="submit" value="Edit User">
+                    </th:block>
+                    <th:block th:if="${#lists.isEmpty(user.getFirstname())}">
+                        <input type="submit" value="Add User">
+                    </th:block>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <h3>Users List</h3>
+    <table border="1">
+        <tr>
+            <th>User ID</th>
+            <th>User FName</th>
+            <th>User LName</th>
+            <th>Age</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        <tr th:each="user : ${listUsers}">
+            <td th:utext="${user.getId()}">ID</td>
+            <td th:utext="${user.getFirstname()}">First Name</td>
+            <td th:utext="${user.getLastname()}">Last Name</td>
+            <td th:utext="${user.getAge()}">Age</td>
+            <td><a th:href="@{/edit/{id}(id=${user.getId()})}">Edit</a></td>
+            <td><a th:href="@{/remove/{id}(id=${user.getId()})}">Delete</a> </td>
+        </tr>
+    </table>
+</body>
+</html>
+</html>
