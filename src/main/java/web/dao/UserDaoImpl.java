@@ -1,5 +1,6 @@
 package web.dao;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import web.model.User;
 
@@ -24,13 +25,12 @@ public class UserDaoImpl implements UserDao {
     @Transactional
     public void updateUser(User user) {
         entityManager.merge(user);
-        entityManager.flush();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<User> listUser() {
-        List<User> users = entityManager.createQuery("SELECT u FROM User u").getResultList();
+        List<User> users = entityManager.createNativeQuery("select * from users", User.class).getResultList();
         return users;
     }
 

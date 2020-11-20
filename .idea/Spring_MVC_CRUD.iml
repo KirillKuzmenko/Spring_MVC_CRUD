@@ -18,6 +18,7 @@
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
           <factory-entry name="Spring_MVC_CRUD" value="2d84353c-291f-4f52-833c-075d39bccf70" />
+          <factory-entry name="entityManagerFactory" value="2d84353c-291f-4f52-833c-075d39bccf70" />
         </datasource-mapping>
         <naming-strategy-map />
       </configuration>

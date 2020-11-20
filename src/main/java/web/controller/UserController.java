@@ -30,7 +30,8 @@ public class UserController {
 
     @RequestMapping(value = "/user/add", method = RequestMethod.POST)
     public String addUser(@ModelAttribute("user") User user) {
-        if (user.getId() == null || user.getId() == 0) {
+        if (user.getId() == null) {
+            System.out.println(user.getId());
             this.userService.addUser(user);
         } else {
             this.userService.updateUser(user);
