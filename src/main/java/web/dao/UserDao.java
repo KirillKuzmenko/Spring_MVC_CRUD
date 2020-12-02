@@ -10,4 +10,5 @@ public interface UserDao {
     List<User> listUser();
     User getUserById(Long id);
     void remoteUser(Long id);
+    User findUserBuyUsername(String username);
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/html">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,47 +9,51 @@
     <h1>Add a User</h1>
 
 
-    <form th:action="@{/user/add}" th:object="${user}"  method="post">
+    <form th:action="@{/admin/user/add}" th:object="${user}" method="post">
         <table>
-            <tr th:if="${not #lists.isEmpty(user.getFirstname())}">
+            <tr th:if="${not #lists.isEmpty(user.getUsername())}">
                 <td>
                     ID
                 </td>
                 <td>
                     <input readonly="true" size="8" disabled="true" th:field="*{id}">
-                    <input type="hidden" th:field="*{id}" >
+                    <input type="hidden" th:field="*{id}">
                 </td>
             </tr>
             <tr>
                 <td>
-                    First Name
+                    Username
                 </td>
                 <td>
-                    <input type="text" th:field="*{firstname}">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Last Name
-                </td>
-                <td>
-                    <input type="text" th:field="*{lastname}">
+                    <input type="text" th:field="*{username}" required>
                 </td>
             </tr>
             <tr>
                 <td>
-                    Age
+                    Password
                 </td>
                 <td>
-                    <input type="text" th:field="*{age}">
+                    <input type="password" th:field="*{password}" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Role
+                </td>
+                <td>
+                    <!--<input type="text" th:field="*{roles}">-->
+                    <select th:field="*{roles}" multiple size="2" required>
+                        <option value="ROLE_ADMIN">Admin</option>
+                        <option value="ROLE_USER">User</option>
+                    </select>
                 </td>
             </tr>
             <tr>
                 <td colspan="2">
-                    <th:block th:if="${not #lists.isEmpty(user.getFirstname())}">
+                    <th:block th:if="${not #lists.isEmpty(user.getId())}">
                         <input type="submit" value="Edit User">
                     </th:block>
-                    <th:block th:if="${#lists.isEmpty(user.getFirstname())}">
+                    <th:block th:if="${#lists.isEmpty(user.getId())}">
                         <input type="submit" value="Add User">
                     </th:block>
                 </td>
@@ -61,19 +65,21 @@
     <table border="1">
         <tr>
             <th>User ID</th>
-            <th>User FName</th>
-            <th>User LName</th>
-            <th>Age</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Role</th>
             <th>Edit</th>
             <th>Delete</th>
         </tr>
         <tr th:each="user : ${listUsers}">
             <td th:utext="${user.getId()}">ID</td>
-            <td th:utext="${user.getFirstname()}">First Name</td>
-            <td th:utext="${user.getLastname()}">Last Name</td>
-            <td th:utext="${user.getAge()}">Age</td>
-            <td><a th:href="@{/edit/{id}(id=${user.getId()})}">Edit</a></td>
-            <td><a th:href="@{/remove/{id}(id=${user.getId()})}">Delete</a> </td>
+            <td th:utext="${user.getUsername()}">Username</td>
+            <td th:utext="${user.getPassword()}">Password</td>
+            <td th:each="role : ${user.getRoles()}">
+                <span th:text="${role.role}">Role</span>
+            </td>
+            <td><a th:href="@{/admin/edit/{username}(username=${user.getUsername()})}">Edit</a></td>
+            <td><a th:href="@{/admin/remove/{username}(username=${user.getUsername()})}">Delete</a></td>
         </tr>
     </table>
 </body>
