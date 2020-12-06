@@ -5,10 +5,13 @@ import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import web.model.User;
 import web.sevice.UserService;
 
+
 @Controller
+@RequestMapping(value = "/admin")
 public class AdminController {
 
     private UserService userService;
@@ -18,14 +21,14 @@ public class AdminController {
         this.userService = userService;
     }
 
-    @RequestMapping(value = {"/admin/users"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/users"}, method = RequestMethod.GET)
     public String listUsers(Model model) {
         model.addAttribute("user", new User());
         model.addAttribute("listUsers", this.userService.listUser());
-        return "userPage";
+        return "admin_page";
     }
 
-    @RequestMapping(value = "/admin/user/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/users/add", method = RequestMethod.POST)
     public String addUser(@ModelAttribute("user") User user) {
         if (user.getId() == null) {
             this.userService.addUser(user);
@@ -35,16 +38,16 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
-    @RequestMapping("/admin/remove/{id}")
+    @RequestMapping("/remove/{id}")
     public String removeUser(@PathVariable("id") Long id) {
         this.userService.removeUser(id);
         return "redirect:/admin/users";
     }
 
-    @RequestMapping("/admin/edit/{username}")
-    public String editUser(@PathVariable("username") String username, Model model) {
-        model.addAttribute("user", this.userService.findUserBuyUsername(username));
-        model.addAttribute("listUsers", this.userService.listUser());
-        return "userPage";
+    @RequestMapping("/edit/{id}")
+    public String editUser(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("user", this.userService.getUserById(id));
+        //model.addAttribute("listUsers", this.userService.listUser());
+        return "edit";
     }
 }

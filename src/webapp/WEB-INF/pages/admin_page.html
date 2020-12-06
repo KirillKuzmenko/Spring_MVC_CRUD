@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello</title>
+</head>
+<body>
+<h1>Add a User</h1>
+
+<form th:action="@{/admin/users/add}" th:object="${user}"  method="post">
+    <table>
+        <tr>
+            <td>Username</td>
+            <td><input type="text" th:field="*{username}" required></td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td><input type="password" th:field="*{password}" required></td>
+        </tr>
+        <tr>
+            <td>Role</td>
+            <td>
+                <select id="roles" name="roles" multiple size="2" required
+                class="form-control form-control-sm">
+                    <option value="ROLE_ADMIN">ADMIN</option>
+                    <option value="ROLE_USER">USER</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="Add User">
+            </td>
+        </tr>
+    </table>
+</form>
+
+<h3>Users List</h3>
+<table border="1">
+    <tr>
+        <th>User ID</th>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Role</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    <tr th:each="user : ${listUsers}">
+        <td th:utext="${user.getId()}">ID</td>
+        <td th:utext="${user.getUsername()}">Username</td>
+        <td th:utext="${user.getPassword()}">Password</td>
+        <td>
+            <th:block th:each="role, iter: ${user.getAuthorities()}">
+                <span th:text="${role.getAuthority()}"></span>
+                <th:block th:if="${!iter.last}">, </th:block>
+            </th:block>
+        </td>
+        <td><a th:href="@{/admin/edit/{id}(id=${user.getId()})}">Edit</a></td>
+        <td><a th:href="@{/admin/remove/{id}(id=${user.getId()})}">Delete</a></td>
+    </tr>
+</table>
+<form th:action="@{/logout}" method="post}">
+    <input type="submit" value="Sign Out"/>
+</form>
+</body>
+</html>

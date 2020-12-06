@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit</title>
+</head>
+<body>
+
+<h1>Edit User</h1>
+
+<form th:action="@{/admin/users/add}" th:object="${user}" method="post">
+    <table border="1">
+        <tr>
+            <td>Id</td>
+            <td>
+                <input readonly="true" size="8" disabled="true" th:field="*{id}">
+                <input type="hidden" th:field="*{id}" >
+            </td>
+        </tr>
+        <tr>
+            <td>Username</td>
+            <td><input type="text" th:field="*{username}" required></td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td><input type="password" th:field="*{password}" required></td>
+        </tr>
+        <tr>
+            <td>Roles</td>
+            <td>
+                <select id="roles" name="roles" multiple size="2" required
+                        class="form-control form-control-sm">
+                    <option value="ROLE_ADMIN">ADMIN</option>
+                    <option value="ROLE_USER">USER</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>First Name</td>
+            <td><input type="text" th:field="*{firstname}"></td>
+        </tr>
+        <tr>
+            <td>Last Name</td>
+            <td><input type="text" th:field="*{lastname}"></td>
+        </tr>
+        <tr>
+            <td>Age</td>
+            <td><input type="text" th:field="*{age}"></td>
+        </tr>
+        <tr th:colspan="2">
+            <td>
+                <input type="submit" value="Edit User">
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

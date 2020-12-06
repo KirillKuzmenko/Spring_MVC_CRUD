@@ -6,7 +6,44 @@
     <title>Title</title>
 </head>
 <body>
-
+    <table border="1">
+        <tr>
+            <td>Id</td>
+            <td th:text="${user.getId()}"></td>
+        </tr>
+        <tr>
+            <td>Username</td>
+            <td th:text="${user.getUsername()}"></td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td th:text="${user.getPassword()}"></td>
+        </tr>
+        <tr>
+            <td>Roles</td>
+            <td>
+                <th:block th:each="role, iter: ${user.getAuthorities()}">
+                    <span th:text="${role.getAuthority()}"></span>
+                    <th:block th:if="${!iter.last}">, </th:block>
+                </th:block>
+            </td>
+        </tr>
+        <tr>
+            <td>First Name</td>
+            <td th:text="${user.getFirstname()}"></td>
+        </tr>
+        <tr>
+            <td>Last Name</td>
+            <td th:text="${user.getLastname()}"></td>
+        </tr>
+        <tr>
+            <td>Age</td>
+            <td th:text="${user.getAge()}"></td>
+        </tr>
+    </table>
+    <form th:action="@{/logout}" method="post}">
+        <input type="submit" value="Sign Out"/>
+    </form>
 </body>
 </html>
 </html>

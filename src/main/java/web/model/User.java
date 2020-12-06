@@ -4,7 +4,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -24,7 +26,7 @@ public class User implements UserDetails {
     @Column
     private int age;
 
-    @Column
+    @Column(unique = true)
     private String username;
 
     @Column
@@ -32,20 +34,27 @@ public class User implements UserDetails {
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles;
 
 
     public User() {}
 
-    public User(String firstname, String lastname, int age, String username, String password, Set<Role> roles) {
+    public User(String username, String password, Role... roles) {
+        this.username = username;
+        this.password = password;
+        this.roles = new HashSet<>(Arrays.asList(roles));
+        firstname = username;
+        lastname = username;
+        age = 0;
+    }
+
+    public User(String firstname, String lastname, int age, String username, String password, Role... roles) {
+        this(username, password, roles);
         this.firstname = firstname;
         this.lastname = lastname;
         this.age = age;
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
     }
 
     public Long getId() {

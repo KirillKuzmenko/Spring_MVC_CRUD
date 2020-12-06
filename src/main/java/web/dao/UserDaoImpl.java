@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import web.model.Role;
 import web.model.User;
 
+import javax.persistence.TypedQuery;
 import javax.transaction.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,7 +27,6 @@ public class UserDaoImpl implements UserDao {
     @Override
     @Transactional
     public void addUser(User user) {
-        user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         entityManager.persist(user);
     }
@@ -34,14 +34,24 @@ public class UserDaoImpl implements UserDao {
     @Override
     @Transactional
     public void updateUser(User user) {
-        entityManager.merge(user);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        entityManager.createQuery("update User set username = :username, password = :password" +
+                ", firstname = :firstname, lastname = :lastname, age = :age" +
+                " where id = :id")
+                .setParameter("id", user.getId())
+                .setParameter("username", user.getUsername())
+                .setParameter("password", user.getPassword())
+                .setParameter("firstname", user.getFirstname())
+                .setParameter("lastname", user.getLastname())
+                .setParameter("age", user.getAge())
+                .executeUpdate();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<User> listUser() {
-        List<User> users = entityManager.createNativeQuery("select * from users", User.class).getResultList();
-        return users;
+        TypedQuery<User> users = entityManager.createQuery("from User", User.class);
+        return users.getResultList();
     }
 
     @Override
@@ -52,11 +62,22 @@ public class UserDaoImpl implements UserDao {
     @Override
     @Transactional
     public void remoteUser(Long id) {
-        entityManager.remove(getUserById(id));
+        entityManager.createQuery("delete from User where id = :id")
+        .setParameter("id", id)
+        .executeUpdate();
     }
 
     @Override
     public User findUserBuyUsername(String username) {
-        return (User) entityManager.createQuery("from User u where u.username = :username").setParameter("username", username).getSingleResult();
+        return entityManager.createQuery("from User where username = :username", User.class)
+                .setParameter("username", username)
+                .getSingleResult();
+    }
+
+    @Override
+    public Role findRoleByName(String role) {
+        return entityManager.createQuery("from Role where role = :role", Role.class)
+                .setParameter("role", role)
+                .getSingleResult();
     }
 }
