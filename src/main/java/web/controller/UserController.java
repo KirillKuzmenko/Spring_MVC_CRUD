@@ -27,11 +27,6 @@ public class UserController {
         return "index";
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String loginPage() {
-        return "login";
-    }
-
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public String userPage(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

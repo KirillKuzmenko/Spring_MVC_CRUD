@@ -35,16 +35,7 @@ public class UserDaoImpl implements UserDao {
     @Transactional
     public void updateUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        entityManager.createQuery("update User set username = :username, password = :password" +
-                ", firstname = :firstname, lastname = :lastname, age = :age" +
-                " where id = :id")
-                .setParameter("id", user.getId())
-                .setParameter("username", user.getUsername())
-                .setParameter("password", user.getPassword())
-                .setParameter("firstname", user.getFirstname())
-                .setParameter("lastname", user.getLastname())
-                .setParameter("age", user.getAge())
-                .executeUpdate();
+        entityManager.merge(user);
     }
 
     @Override
@@ -61,7 +52,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @Transactional
-    public void remoteUser(Long id) {
+    public void removeUser(Long id) {
         entityManager.createQuery("delete from User where id = :id")
         .setParameter("id", id)
         .executeUpdate();
@@ -71,13 +62,6 @@ public class UserDaoImpl implements UserDao {
     public User findUserBuyUsername(String username) {
         return entityManager.createQuery("from User where username = :username", User.class)
                 .setParameter("username", username)
-                .getSingleResult();
-    }
-
-    @Override
-    public Role findRoleByName(String role) {
-        return entityManager.createQuery("from Role where role = :role", Role.class)
-                .setParameter("role", role)
                 .getSingleResult();
     }
 }

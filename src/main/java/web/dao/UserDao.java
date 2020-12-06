@@ -10,7 +10,6 @@ public interface UserDao {
     void updateUser(User user);
     List<User> listUser();
     User getUserById(Long id);
-    void remoteUser(Long id);
+    void removeUser(Long id);
     User findUserBuyUsername(String username);
-    Role findRoleByName(String name);
 }
